@@ -47,7 +47,19 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
     
 
 2. Parse metadata
+- Explanation: 
 
+    This script is the preparation step. After running this script, Three folders will be created in the specified destination:
+    - SeqTypes (For each SeqTypes)
+        - Download
+        - Processed
+        - Merged
+    - Download_urls
+    - Logs
+    
+    And then filtered_metadata which we generated from the previous step will be used to download all the bam files.
+
+3. 
 
 
 
