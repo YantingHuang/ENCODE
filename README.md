@@ -42,8 +42,11 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
 - Alignments:
   - RNA Sequence: alignments
   - Histone_Chipseq: **Exclude** redacted unfiltered alignments & unfiltered alignments
+  
+
     
 
+2. Parse metadata
 
 
 
