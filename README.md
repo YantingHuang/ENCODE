@@ -65,7 +65,7 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
 
 3. Submit Multiple Jobs into HPC
 
-This script is the core part of our whole project, which will split the sequence into specified Window size (eg. 100) and generate the readcounts of the overlapping windows. This script  is highly dependent on which cluster we are using to complete the jobs. In our project, we are using [XSEDE Comet Cluster](https://portal.xsede.org/sdsc-comet), which uses SLURM to submit jobs. 
+    This script is the core part of our whole project, which will split the sequence into specified Window size (eg. 100) and generate the readcounts of the overlapping windows. This script  is highly dependent on which cluster we are using to complete the jobs. In our project, we are using [XSEDE Comet Cluster](https://portal.xsede.org/sdsc-comet), which uses SLURM to submit jobs. 
 
 - Denpendencies:
 
@@ -75,6 +75,7 @@ This script is the core part of our whole project, which will split the sequence
     - Find the overlap with pre-defined windows
     - Output the readcounts to csv
     - Delete the bam file
+  - 
    
 - Usage:
 ```
@@ -86,6 +87,8 @@ python submit_multiple_jobs_single_exp_assay.py PolyA_RNAseq 100 --XSEDE_user_id
     This script is designed to submit concurrent jobs without overloading the cluster but also efficiently process the data.
 The main logic is as follows:
     Keeping submitting jobs until we reach the maximum concurrent job number we specified in the argument(eg. 50 ), and then wait for 20 seconds and check if any jobs completed and we can submit the subsequent jobs.
+    
+    We also 
     
     
 
