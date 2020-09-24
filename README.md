@@ -3,6 +3,9 @@ ENCODE experiments data processing
 #### Functionality:
 
 
+#### Environment:
+
+
 #### Pipeline
 1. Pre-processing metadata taken from ENCODE
 - Usage:
@@ -82,6 +85,9 @@ python submit_multiple_jobs_single_exp_assay.py PolyA_RNAseq 100 --XSEDE_user_id
 
     This script is designed to submit concurrent jobs without overloading the cluster but also efficiently process the data.
 The main logic is as follows:
+    Keeping submitting jobs until we reach the maximum concurrent job number we specified in the argument(eg. 50 ), and then wait for 20 seconds and check if any jobs completed and we can submit the subsequent jobs.
+    
+    
 
     
 
