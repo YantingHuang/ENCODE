@@ -1,5 +1,8 @@
 # ENCODE(Encyclopedia of DNA Elements)
 ENCODE experiments data processing 
+#### Functionality:
+
+
 #### Pipeline
 1. Pre-processing metadata taken from ENCODE
 - Usage:
@@ -54,12 +57,41 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
         - Download
         - Processed
         - Merged
-    - Download_urls
+    - Download_urls： Generate csv files for each sequence type of the downloading url taken from the filtered_metadata from the previous step.
     - Logs
-    
-    And then filtered_metadata which we generated from the previous step will be used to download all the bam files.
 
-3. 
+3. Submit Multiple Jobs into HPC
+
+This script is the core part of our whole project, which will split the sequence into specified Window size (eg. 100) and generate the readcounts of the overlapping windows. This script  is highly dependent on which cluster we are using to complete the jobs. In our project, we are using [XSEDE Comet Cluster](https://portal.xsede.org/sdsc-comet), which uses SLURM to submit jobs. 
+
+- Denpendencies:
+
+  - test_single_bam_processing.sh
+  - single_bam_file_processor.R :
+    - Read in one bam file
+    - Find the overlap with pre-defined windows
+    - Output the readcounts to csv
+    - Delete the bam file
+   
+- Usage:
+```
+python submit_multiple_jobs_single_exp_assay.py PolyA_RNAseq 100 --XSEDE_user_id xxx --resume_unfinished 
+```
+
+- Explanation:
+
+    This script is designed to submit concurrent jobs without overloading the cluster but also efficiently process the data.
+The main logic is as follows:
+
+    
+
+
+    
+    
+ 
+
+
+
 
 
 
