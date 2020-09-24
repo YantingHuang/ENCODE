@@ -1,6 +1,6 @@
 # ENCODE(Encyclopedia of DNA Elements)
 ENCODE experiments data processing 
-#### Functionality:
+#### Objective:
 
 
 #### Environment:
@@ -67,7 +67,7 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
 
     This script is the core part of our whole project, which will split the sequence into specified Window size (eg. 100) and generate the readcounts of the overlapping windows. This script  is highly dependent on which cluster we are using to complete the jobs. In our project, we are using [XSEDE Comet Cluster](https://portal.xsede.org/sdsc-comet), which uses SLURM to submit jobs. 
 
-- Denpendencies:
+- Dependencies:
 
   - test_single_bam_processing.sh
   - single_bam_file_processor.R :
@@ -75,20 +75,33 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
     - Find the overlap with pre-defined windows
     - Output the readcounts to csv
     - Delete the bam file
-  - 
+  - Final_windows_size.py
    
 - Usage:
 ```
 python submit_multiple_jobs_single_exp_assay.py PolyA_RNAseq 100 --XSEDE_user_id xxx --resume_unfinished 
 ```
-
+```
+python Final_windows_size.py hg38.chrom.sizes 100 wins100.txt
+```
 - Explanation:
 
     This script is designed to submit concurrent jobs without overloading the cluster but also efficiently process the data.
 The main logic is as follows:
     Keeping submitting jobs until we reach the maximum concurrent job number we specified in the argument(eg. 50 ), and then wait for 20 seconds and check if any jobs completed and we can submit the subsequent jobs.
+
+4.  Generate the list of Technical Replicates
+
+- Explanation:
+
+    There are two types of replicates in the ENCODE database: biological replicates and technical replicates. Biological replicates are coming from two different biological samples while techinical replicates are coming from the same biological samples. So we decide to merge the readcounts for technical replicates of the sample experiment. 
     
-    We also 
+    This script is used to generate the list of Technical Replicates that belong to the same Experiment Accession based on the filtered metadata we generated in the first step. 
+    
+5. Merge Processed Counts
+
+
+    
     
     
 
