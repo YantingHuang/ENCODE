@@ -5,7 +5,7 @@ library(dplyr)
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
-  stop("usage: Rscript 03_merge_processed_counts.R root_dir assay_type tech_rep_lst_dir", call.=FALSE)
+  stop("usage: Rscript 04_merge_processed_counts.R root_dir assay_type tech_rep_lst_dir", call.=FALSE)
 } else {
   # default output file
   root.dir = args[1] 

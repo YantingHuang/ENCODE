@@ -1,4 +1,4 @@
- library(GenomicRanges)
+library(GenomicRanges)
 #library(GenomicFeatures)
 library(GenomicAlignments)
 library(data.table)

@@ -1,13 +1,27 @@
-# ENCODE(Encyclopedia of DNA Elements)
+# ENCODE (Encyclopedia of DNA Elements)
 ENCODE experiments data processing 
 #### Objective:
+ENCODE (Encyclopedia of DNA Elements) contains omics profiles obtained across multiple experiment assays. In this project, we preprocess around 6,100 alignment profiles from DNase sequencing, histone ChIP-seq, TF ChIP-seq, PolyA RNA-seq and ATAC-seq to obtain their read counts coverage across the whole human genome in the form of around 30 million predefined 100-bp bins. This repo contains the whole pipeline of data processing starting from preprocessing the ENCODE experiments meta data to fetching the counts data for the genomic location of interests (with a GWAS example using GWAS Catlog disease-related risky variants) in batch. The user can replicate the data processing pipeline for the new experiments added to ENCODE or other experiments assays of interest in the future.
 
+The full processed data in .tsv.gz format and their indexing files will be available in [TODO].
 
-#### Environment:
+#### Prerequisites:
+Software:
+- Python  3.7.9
+- R 3.5.1
+- tabix 1.7-2
+- bgzip 1.7-2
 
+Packages:
+- numpy 1.19.2
+- pandas 0.25.3
+- h5py 2.10.0
+- GenomicRanges 1.34.0
+- GenomicAlignments 1.18.1
+- data.table 1.12.8
 
 #### Pipeline
-1. Pre-processing metadata taken from ENCODE
+00. Pre-processing metadata taken from ENCODE
 - Usage:
   
 ```
@@ -52,7 +66,7 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
 
     
 
-2. Parse metadata
+01. Parse metadata
 - Explanation: 
 
     This script is the preparation step. After running this script, Three folders will be created in the specified destination:
@@ -63,7 +77,7 @@ wget https://www.encodeproject.org/metadata/?type=Experiment&assay_title=ATAC-se
     - Download_urls： Generate csv files for each sequence type of the downloading url taken from the filtered_metadata from the previous step.
     - Logs
 
-3. Submit Multiple Jobs into HPC
+02. Submit Multiple Jobs into HPC
 
     This script is the core part of our whole project, which will split the sequence into specified Window size (eg. 100) and generate the readcounts of the overlapping windows. This script  is highly dependent on which cluster we are using to complete the jobs. In our project, we are using [XSEDE Comet Cluster](https://portal.xsede.org/sdsc-comet), which uses SLURM to submit jobs. 
 
@@ -90,7 +104,7 @@ python Final_windows_size.py hg38.chrom.sizes 100 wins100.txt
 The main logic is as follows:
     Keeping submitting jobs until we reach the maximum concurrent job number we specified in the argument(eg. 50 ), and then wait for 20 seconds and check if any jobs completed and we can submit the subsequent jobs.
 
-4.  Generate the list of Technical Replicates
+03.  Generate the list of Technical Replicates
 
 - Explanation:
 
@@ -98,8 +112,29 @@ The main logic is as follows:
     
     This script is used to generate the list of Technical Replicates that belong to the same Experiment Accession based on the filtered metadata we generated in the first step. 
     
-5. Merge Processed Counts
+04. Merge Processed Counts
+- Usage:
+```
+Rscript 04_merge_processed_counts.R root_dir assay_type tech_rep_lst_dir
+```
+- Explanation:
+  
+  Merge Technical replicates based on the list generated in step 03. The merging is based on the mean read counts. A tab-delimited file and a fst file (can only be read by R) will be generated.
 
+05. Fetch counts data of interests
+- Usage:
+```
+python 05_fetch_gwas_variants_features.py
+```
+- Explanation:
+  We provided an example of efficient counts data fetching procedure here. First, we process the GWAS catalog risky variants and match neutral variants based on AF and genomic context from gnomAD database. A coordinate file is generated after that and will be used for the counts data fetching procedure. Next, a Vectorizer() object is initialized and internally uses tabix to fetch the regions of interest in batch. (Note: multiple adjacent regions fetching is supported, i.e., fetch counts features for not only the center variant window but also its up- and downstream windows). At last, the fetched features will be written to a hdf5 file and the keys are in the form of "[variant_name]/counts_data".
+
+  To fit your own purposes, you can generate the coordinates to search tab-delimited file as shown in "example_data/GCST007038_variants.tsv". The columns correspond to 1) chromosome, 2) search start, 3) search end, 4) number of upstream windows, 5) number of downstream windows and genomic coordinate of the center location, respectively. Note that the search start is inclusive and the search end is exclusive, i.e., [start, end). The Vectorizer() object takes the tab-delimited file as input for the further data fetching procedure.
+  
+
+
+
+    
 
     
     
