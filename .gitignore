@@ -5,3 +5,6 @@ download_urls/
 fetch_test/
 data/
 commons/
+backup/
+shell_script/
+test_*
